@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Weekly Grand Prix</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Grand Prix">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#E8261B">
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ECEDF0;--card:#fff;--ink:#14161B;--mute:#5E6470;--line:#CDD0D8;--red:#E8261B;--yel:#F2B800;--grn:#17B052;--gt:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1014;--card:#1A1D24;--ink:#F4F5F7;--mute:#9BA1AE;--line:#2D323D;--red:#FF3B30;--yel:#FFD60A;--grn:#2BD96B}}
+:root[data-theme="dark"]{--bg:#0E1014;--card:#1A1D24;--ink:#F4F5F7;--mute:#9BA1AE;--line:#2D323D;--red:#FF3B30;--yel:#FFD60A;--grn:#2BD96B}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:600 17px/1.35 "Barlow Semi Condensed",system-ui,sans-serif}
+main{max-width:480px;margin:0 auto;padding:16px 14px 40px}
+h1,h2,.big,.rank{font-family:"Russo One",Impact,sans-serif;font-weight:400;margin:0}
+h1{font-size:28px;line-height:1.05;font-style:italic}
+.chk{height:16px;background:repeating-conic-gradient(var(--ink) 0 25%,var(--card) 0 50%) 0 0/16px 16px}
+.hero{background:var(--card);border-radius:14px;overflow:hidden;border:2px solid var(--ink)}
+.hero .in{padding:14px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.rank{color:var(--red);font-size:15px;margin-top:6px}
+.mute{color:var(--mute);font-size:15px}
+.track{position:relative;height:30px;margin:26px 0 6px;border-radius:99px;background:var(--bg);border:2px solid var(--ink)}
+.fill{position:absolute;inset:0 auto 0 0;border-radius:99px;background:repeating-linear-gradient(110deg,var(--red) 0 14px,#C81E14 14px 28px);transition:width .8s}
+.car{position:absolute;top:-24px;font-size:32px;transform:translateX(-50%) scaleX(-1);transition:left .8s;line-height:1}
+.fin{position:absolute;right:-2px;top:-2px;bottom:-2px;width:20px;border-radius:0 99px 99px 0;background:repeating-conic-gradient(var(--ink) 0 25%,var(--card) 0 50%) 0 0/10px 10px;border:2px solid var(--ink)}
+.track.pop .car{animation:rev .7s}@keyframes rev{30%{transform:translateX(-50%) scaleX(-1) rotate(-8deg) translateY(-6px)}}
+h2{font-size:18px;margin:6px 0 10px;font-style:italic}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:18px 0}
+.d{border:2px solid var(--ink);border-radius:10px;background:var(--card);color:var(--ink);padding:8px 0;font:700 14px "Barlow Semi Condensed",sans-serif;text-align:center;cursor:pointer}
+.d b{display:block;font:400 18px "Russo One",Impact,sans-serif;min-height:26px}
+.d.sel{background:var(--ink);color:var(--bg)}
+.d.ok{border-color:var(--grn);border-width:3px}
+.d:disabled{opacity:.35}
+.ch{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:0 0 10px;padding:12px 14px;border:2px solid var(--ink);border-left:10px solid var(--red);border-radius:12px;background:var(--card);color:var(--ink);font:700 18px "Barlow Semi Condensed",sans-serif;cursor:pointer;min-height:64px}
+.ch .e{font-size:28px}.ch span:nth-child(2){flex:1}
+.ch .p{font:400 15px "Russo One",Impact,sans-serif;color:var(--mute)}
+.ch.on{border-left-color:var(--grn);background:var(--grn);color:#08140C}
+.ch.on .p{color:#08140C}
+.ch:disabled{cursor:default}.ch:disabled:not(.on){opacity:.55}
+.score{display:flex;justify-content:space-between;align-items:center;margin:4px 0 16px}
+.big{font-size:32px}
+.tag{font:700 14px "Barlow Semi Condensed",sans-serif;padding:4px 12px;border-radius:99px;border:2px solid var(--ink);background:var(--yel);color:#14161B}
+.tag.ok{background:var(--grn);color:#08140C}
+.parent{border:2px dashed var(--ink);border-radius:14px;padding:14px;background:var(--card)}
+.parent p{margin:0 0 10px}
+.go{display:flex;gap:8px}
+input{width:96px;font:400 22px "Russo One",Impact,sans-serif;text-transform:uppercase;text-align:center;padding:10px;border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink)}
+button.cta{flex:1;border:2px solid var(--ink);border-radius:10px;background:var(--yel);color:#14161B;font:400 16px "Russo One",Impact,sans-serif;padding:10px;cursor:pointer}
+button.cta:disabled{opacity:.4}
+button.lnk{background:none;border:0;color:var(--mute);text-decoration:underline;font:700 15px "Barlow Semi Condensed",sans-serif;padding:8px 0;cursor:pointer}
+.badges{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.b{border:2px solid var(--line);border-radius:12px;padding:10px;font-size:15px;font-weight:700;color:var(--mute);background:var(--card)}
+.b.on{border-color:var(--ink);color:var(--ink)}.b .e{font-size:26px;display:block;filter:grayscale(1);opacity:.45}.b.on .e{filter:none;opacity:1}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,120px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:99px;font:400 15px "Russo One",Impact,sans-serif;transition:transform .3s}
+#toast.show{transform:translate(-50%,0)}
+button.seen{display:block;width:100%;text-align:left;margin:0 0 8px;padding:10px 12px;border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink);font:700 16px "Barlow Semi Condensed",sans-serif;cursor:pointer;min-height:44px}
+button.seen.on{background:var(--grn);color:#08140C}
+.rule{margin-top:18px;padding:12px 14px;border-left:10px solid var(--yel);background:var(--card);border-radius:10px;font-size:16px}
+h2.m{margin-top:22px}
+.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0 0}
+.tab{border:2px solid var(--ink);border-radius:10px;background:var(--card);color:var(--ink);padding:10px 4px;font:400 14px "Russo One",Impact,sans-serif;cursor:pointer}
+.tab.sel{background:var(--ink);color:var(--bg)}
+.yr{display:flex;align-items:center;justify-content:space-between;margin:18px 0 12px}
+.yr button{border:2px solid var(--ink);border-radius:10px;background:var(--card);color:var(--ink);font:400 20px "Russo One",Impact,sans-serif;width:48px;height:44px;cursor:pointer}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.st{background:var(--card);border:2px solid var(--ink);border-radius:12px;padding:10px 12px}
+.st b{display:block;font:400 28px "Russo One",Impact,sans-serif;color:var(--red)}
+.mr{display:grid;grid-template-columns:44px 1fr 110px;gap:8px;align-items:center;margin:0 0 8px;font-size:15px}
+.mb{height:16px;border-radius:99px;background:var(--card);border:2px solid var(--ink);overflow:hidden}
+.mb i{display:block;height:100%;background:repeating-linear-gradient(110deg,var(--red) 0 10px,#C81E14 10px 20px)}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9}
+.mc{background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:16px;max-width:420px;width:100%}
+.mc p{margin:0 0 12px}.mc .go{margin-top:8px}.mc input.w{width:100%;margin-bottom:8px}
+button.no{border:2px solid var(--ink);border-radius:10px;background:var(--bg);color:var(--ink);font:400 16px "Russo One",Impact,sans-serif;padding:10px 14px;cursor:pointer}
+.d small{display:block;font-size:12px;font-weight:600;opacity:.75}
+.rwd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 8px;padding:10px 12px;border:2px solid var(--ink);border-left:10px solid var(--line);border-radius:12px;background:var(--card);font-size:16px}
+.rwd.on{border-left-color:var(--grn)}
+input.t{width:100%;margin:0 0 8px;font:700 16px "Barlow Semi Condensed",sans-serif;text-transform:none;text-align:left}
+button:focus-visible,input:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<div id="toast" role="status"></div>
+<script>
+var CH=[{id:'hw',t:'Qualifying lap: homework done',p:3,e:'📚'},{id:'rd',t:'Pit stop: read 20 minutes',p:2,e:'📖'},{id:'mv',t:'Ride or scoot for 30 minutes',p:3,e:'🛴'},{id:'hm',t:'Pit crew: help at home',p:2,e:'🔧'},{id:'sc',t:'Lights out: screens off on time',p:2,e:'🚦'},{id:'tr',t:'Fair play: told the truth, even when hard',p:2,e:'🤝'},{id:'rs',t:'Respect: kind words and listening',p:2,e:'🙌'}];
+var MAX=CH.reduce(function(a,c){return a+c.p},0);
+var RANKS=['Scooter Rookie','BMX Rider','Stunt Rider','Karting Ace','Pit Crew Pro','Podium Finisher','World Champion'];
+var DN=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+var PER=40;
+function pad(n){return (n<10?'0':'')+n}
+function key(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+var now=new Date(),today=(now.getDay()+6)%7;
+var mon=new Date(now);mon.setDate(now.getDate()-today);
+var WK=key(mon);
+function load(){try{return JSON.parse(localStorage.getItem('wc-quest'))}catch(e){return null}}
+function save(){try{localStorage.setItem('wc-quest',JSON.stringify(S))}catch(e){}}
+var S=load()||{week:WK,lifetime:0,perfect:false,days:{}};
+function dayPts(d){return CH.reduce(function(a,c){return a+(d&&d.done.indexOf(c.id)>-1?c.p:0)},0)}
+function bank(d){var cf=d.conf||[],p=0;CH.forEach(function(c){if(d.done.indexOf(c.id)>-1&&cf.indexOf(c.id)>-1)p+=c.p});var all=CH.every(function(c){return d.done.indexOf(c.id)>-1&&cf.indexOf(c.id)>-1});return{p:p+(all?3:0)+(d.own?1:0),all:all}}
+function weekOk(){var n=0,p=0;for(var i=0;i<7;i++){var d=S.days[i];if(d&&d.ok){n++;p+=d.ok.pts}}return{n:n,p:p}}
+if(S.week!==WK){var ow=S.week.split('-'),o=new Date(+ow[0],+ow[1]-1,+ow[2]);S.history=S.history||{};for(var q=0;q<7;q++){var od=S.days[q];if(od&&od.ok){var xd=new Date(o);xd.setDate(o.getDate()+q);S.history[key(xd)]=od.ok}}S.lifetime+=weekOk().p;S.week=WK;S.days={};save()}
+function allDays(){var out=[],k;for(k in (S.history||{}))out.push({date:k,ok:S.history[k]});for(var i=0;i<7;i++){var d=S.days[i];if(d&&d.ok){var dt=new Date(mon);dt.setDate(mon.getDate()+i);out.push({date:key(dt),ok:d.ok})}}return out}
+var DR={wk:['Pick the family movie or dinner','Choose a weekend outing'],lap:['Pick the weekend breakfast','Bike or scooter park trip','Race gear: cap or stickers','Go-karting or a race day','Bike or scooter upgrade','Grand Prix prize day of his choice'],yr:'End-of-season big prize'};
+var LAPAT=[40,80,120,160,200,240],WKN=[4,6],editR=false,RL={};
+function fd(d){return d.getDate()+' '+MN[d.getMonth()]}
+function fdk(k){var p=k.split('-');return fd(new Date(+p[0],+p[1]-1,+p[2]))+' '+p[0]}
+function modalHtml(){return '<div id="modal"><div class="mc" role="dialog" aria-modal="true"><p><b>'+pend.m+'</b></p>'+(pend.w?'<input class="w" id="cw" placeholder="Type '+pend.w+'" autocomplete="off">':'')+'<div class="go"><button class="no" data-no="1">Cancel</button><button class="cta" data-yes="1">Yes, do it</button></div></div></div>'}
+function rwv(){
+  var w=weekOk(),total=S.lifetime+w.p,R=S.rewards||DR,cl=S.claimed||{},sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  var yd=allDays().filter(function(x){return +x.date.slice(0,4)===now.getFullYear()}).length,h='',i;
+  if(editR){
+    var vals=R.wk.concat(R.lap,[R.yr]);
+    h+='<h2 class="m">Edit reward names</h2><p class="mute">Points and days stay the same. Only the names change.</p>';
+    vals.forEach(function(v,j){var lb=j<2?WKN[j]+' banked days in a week':j<8?'Lap '+(j)+' · '+LAPAT[j-2]+' pts':'100 banked days in the year';h+='<label class="mute">'+lb+'</label><input class="t" id="r'+j+'" maxlength="60" value="'+v.replace(/"/g,'&quot;')+'">'});
+    return h+'<div class="go"><button class="no" data-rcancel="1">Cancel</button><button class="cta" data-rsave="1">Save</button></div>'}
+  RL={};
+  function card(k,head,tx,ok,prog){var c=cl[k];RL[k]=tx;
+    return '<div class="rwd'+(ok||c?' on':'')+'"><div><b>'+head+'</b><br>'+tx+'</div>'+(c?'<span class="tag ok">Claimed '+fdk(c)+'</span>':ok?'<button class="cta" style="flex:none;padding:8px 12px" data-claim="'+k+'">Claim it</button>':'<span class="mute">'+prog+'</span>')+'</div>'}
+  h+='<h2 class="m">This week, '+fd(mon)+' to '+fd(sun)+' '+sun.getFullYear()+'</h2>';
+  for(i=0;i<2;i++)h+=card('w'+WK+'_'+WKN[i],WKN[i]+' banked days',R.wk[i],w.n>=WKN[i],w.n+' / '+WKN[i]+' days');
+  h+='<h2 class="m">Lap rewards</h2>';
+  for(i=0;i<6;i++)h+=card('lap'+LAPAT[i],'Lap '+(i+2)+' · '+LAPAT[i]+' pts',R.lap[i],total>=LAPAT[i],(LAPAT[i]-total)+' pts to go');
+  h+='<h2 class="m">Season prize</h2>'+card('y'+now.getFullYear(),'100 banked days in '+now.getFullYear(),R.yr,yd>=100,yd+' / 100 days');
+  return h+'<p class="mute" style="margin-top:12px">These are starting ideas. Tap below to put in his real rewards.</p><button class="seen" data-redit="1">Edit reward names</button>'}
+var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function rec(){
+  var all=allDays().filter(function(x){return +x.date.slice(0,4)===yr}).sort(function(a,b){return a.date<b.date?-1:1});
+  var pts=0,sw=0,fp=0,best=0,run=0,prev=null,m=[],ic={},i;
+  for(i=0;i<12;i++)m.push({n:0,p:0});
+  all.forEach(function(x){pts+=x.ok.pts;if(x.ok.all)sw++;if(x.ok.own)fp++;
+    var mi=+x.date.slice(5,7)-1;m[mi].n++;m[mi].p+=x.ok.pts;
+    (x.ok.items||[]).forEach(function(id){ic[id]=(ic[id]||0)+1});
+    var p=x.date.split('-'),t=Date.UTC(+p[0],+p[1]-1,+p[2]);
+    run=(prev!==null&&t-prev===86400000)?run+1:1;prev=t;if(run>best)best=run});
+  var mx=Math.max.apply(null,m.map(function(z){return z.p}).concat([1]));
+  var h='<div class="yr"><button data-yr="-1" aria-label="Previous year">‹</button><h2>'+yr+' season record</h2><button data-yr="1" aria-label="Next year">›</button></div>';
+  if(!all.length)return h+'<p class="mute">No banked days in '+yr+' yet. Every approved day is added here automatically.</p>';
+  h+='<div class="stats"><div class="st"><b>'+all.length+'</b>days banked</div><div class="st"><b>'+pts+'</b>points</div><div class="st"><b>'+sw+'</b>clean sweeps</div><div class="st"><b>'+best+'</b>best streak, days</div></div>'
+   +'<div class="st" style="margin-bottom:8px"><b>'+fp+'</b>times he owned up (fair play)</div><p class="mute">First banked day '+fdk(all[0].date)+'. Latest '+fdk(all[all.length-1].date)+'.</p><h2 class="m">Month by month</h2>';
+  for(i=0;i<12;i++)h+='<div class="mr"><span>'+MN[i]+'</span><div class="mb"><i style="width:'+(m[i].p/mx*100)+'%"></i></div><span class="mute">'+m[i].n+' days · '+m[i].p+' pts</span></div>';
+  h+='<h2 class="m">Items done on banked days</h2>';
+  CH.forEach(function(c){h+='<div class="mr" style="grid-template-columns:1fr 70px"><span>'+c.e+' '+c.t+'</span><span class="mute">'+(ic[c.id]||0)+' / '+all.length+'</span></div>'});
+  return h}
+var storeOK=true;try{localStorage.setItem('wc-t','1');localStorage.removeItem('wc-t')}catch(e){storeOK=false}
+var pend=null,view='wk',yr=now.getFullYear(),sel=today,app=document.getElementById('app'),toastT;
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.className='show';clearTimeout(toastT);toastT=setTimeout(function(){t.className=''},2200)}
+function ask(m,fn,w){pend={m:m,fn:fn,w:w};render()}
+function badge(e,t,on){return '<div class="b'+(on?' on':'')+'"><span class="e">'+e+'</span>'+t+'</div>'}
+function render(pop){
+  var w=weekOk(),total=S.lifetime+w.p,lvl=Math.floor(total/PER),into=total%PER;
+  var rank=RANKS[Math.min(lvl,RANKS.length-1)],pc=into/PER*100;
+  var d=S.days[sel]||{done:[],ok:null},pts=dayPts(d),future=sel>today,locked=!!d.ok;
+  var dt=new Date(mon);dt.setDate(mon.getDate()+sel);
+  var h='<div class="hero"><div class="chk"></div><div class="in"><h1>Weekly Grand Prix</h1>'
+   +'<div class="rank">Lap '+(lvl+1)+' · '+rank+'</div>'
+   +'<div class="track'+(pop?' pop':'')+'"><div class="fill" style="width:'+pc+'%"></div><div class="car" style="left:'+Math.max(pc,4)+'%">🏎️</div><div class="fin"></div></div>'
+   +'<div class="row"><span class="mute">'+(PER-into)+' pts to the next lap</span><span class="mute">'+total+' pts total</span></div></div></div>'+(storeOK?'':'<div class="rule">Saving is switched off in this view, so progress will be lost when you close it. Open the tracker from a web link or the Home Screen icon instead.</div>');
+  h+='<div class="tabs"><button class="tab'+(view==='wk'?' sel':'')+'" data-view="wk">Week</button><button class="tab'+(view==='rw'?' sel':'')+'" data-view="rw">Rewards</button><button class="tab'+(view==='rec'?' sel':'')+'" data-view="rec">Season</button></div>';
+  if(view==='rec'){app.innerHTML=h+rec();return}
+  if(view==='rw'){app.innerHTML=h+rwv()+(pend?modalHtml():'');return}
+  var AD=allDays(),perfect=AD.some(function(x){return x.ok.all}),fair=AD.some(function(x){return x.ok.own});
+  var sn=new Date(mon);sn.setDate(mon.getDate()+6);
+  h+='<p class="mute" style="margin:14px 0 -8px">Week of '+fd(mon)+' to '+fd(sn)+' '+sn.getFullYear()+'</p><div class="week">';
+  for(var i=0;i<7;i++){var x=S.days[i],dd=new Date(mon);dd.setDate(mon.getDate()+i);h+='<button class="d'+(i===sel?' sel':'')+(x&&x.ok?' ok':'')+'" data-day="'+i+'"'+(i>today?' disabled':'')+'>'+DN[i]+'<small>'+dd.getDate()+'</small><b>'+(x&&x.ok?'🏁':(i===today?'•':''))+'</b></button>'}
+  h+='</div><h2>'+DN[sel]+' '+dt.getDate()+' '+MN[dt.getMonth()]+' '+dt.getFullYear()+(sel===today?' · Race day':'')+'</h2>';
+  CH.forEach(function(c){var on=d.done.indexOf(c.id)>-1;
+    h+='<button class="ch'+(on?' on':'')+'" data-ch="'+c.id+'"'+((locked||future)?' disabled':'')+' aria-pressed="'+on+'"><span class="e">'+c.e+'</span><span>'+c.t+'</span><span class="p">+'+c.p+'</span></button>'});
+  h+='<div class="score"><span class="big">'+pts+' / '+MAX+'</span><span class="tag'+(locked?' ok':'')+'">'+(locked?'Checkered flag 🏁':'Waiting for race control')+'</span></div>';
+  if(!locked)h+='<p class="mute" style="margin:-8px 0 14px">Finish all '+CH.length+' for a +3 clean sweep bonus.</p>';
+  h+='<div class="parent">';
+  if(locked){
+    h+='<p>Approved by <b>'+d.ok.by+'</b> on '+fd(new Date(d.ok.at))+'. '+d.ok.pts+' pts banked'+(d.ok.all?' with the clean sweep bonus':'')+(d.ok.own?' and a fair play point for owning up':'')+'. This day is locked.</p><button class="lnk" data-reopen="1">Reopen for a correction</button>';
+  }else{
+    var cf=d.conf||[],tk=CH.filter(function(c){return d.done.indexOf(c.id)>-1}),allc=tk.length>0&&tk.every(function(c){return cf.indexOf(c.id)>-1});
+    h+='<p><b>Race control (parent).</b> Check each ticked item together and tap it to confirm. Untick anything that is not done yet. Only confirmed items bank.</p>';
+    tk.forEach(function(c){var on=cf.indexOf(c.id)>-1;h+='<button class="seen'+(on?' on':'')+'" data-seen="'+c.id+'">'+(on?'✓ Seen: ':'Tap to confirm: ')+c.t+'</button>'});
+    h+='<button class="seen'+(d.own?' on':'')+'" data-own="1">🤝 He owned up to a miss (+1 fair play)</button>'
+     +'<div class="go" style="margin-top:6px"><input id="ini" maxlength="3" placeholder="AB" aria-label="Parent initials" autocomplete="off"><button class="cta" data-ok="1"'+((!allc||future)?' disabled':'')+'>Approve day</button></div>';
+  }
+  h+='</div><h2 style="margin-top:22px">Trophy cabinet</h2><div class="badges">'
+   +badge('🏁','First checkered flag',w.n>=1)+badge('⏱️','Pole position: clean sweep',perfect)
+   +badge('🛹','Stunt combo: 3 days banked',w.n>=3)+badge('🏆','Podium: Lap 3 reached',lvl>=2)+badge('🏍️','Full week: 5 days banked',w.n>=5)+badge('🤝','Fair play: owned up to a miss',fair)+'</div><div class="rule"><b>Pit rule:</b> an honest day beats a perfect day. Owning up to a miss never costs points.</div>'
+   +'<h2 class="m">Fix a mistake</h2><button class="seen" data-clear="1">Clear '+DN[sel]+' and start it again</button><button class="seen" data-wk="1">Reset this week</button><button class="seen" data-all="1">Erase everything</button><p class="mute">Cleared days lose their points. Weeks already finished stay in the season record.</p>';
+  if(pend)h+=modalHtml();
+  app.innerHTML=h;
+}
+app.addEventListener('click',function(e){
+  var t=e.target.closest('button');if(!t)return;
+  if(t.dataset.day!==undefined){sel=+t.dataset.day;render();return}
+  if(t.dataset.no){pend=null;render();return}
+  if(t.dataset.yes){var pw=pend;if(pw.w&&((document.getElementById('cw').value||'').trim().toUpperCase()!==pw.w)){toast('Type '+pw.w+' to confirm');return}pend=null;pw.fn();return}
+  if(t.dataset.claim){var ck=t.dataset.claim;ask('Mark "'+RL[ck]+'" as claimed today?',function(){S.claimed=S.claimed||{};S.claimed[ck]=key(new Date());save();render();toast('Reward claimed 🎉')});return}
+  if(t.dataset.redit){editR=true;render();return}
+  if(t.dataset.rcancel){editR=false;render();return}
+  if(t.dataset.rsave){var g=function(j,def){return (document.getElementById('r'+j).value||'').trim()||def};var nr={wk:[g(0,DR.wk[0]),g(1,DR.wk[1])],lap:[],yr:g(8,DR.yr)};for(var j=0;j<6;j++)nr.lap.push(g(j+2,DR.lap[j]));S.rewards=nr;editR=false;save();render();toast('Rewards saved');return}
+  if(t.dataset.view){view=t.dataset.view;render();return}
+  if(t.dataset.yr){yr+=+t.dataset.yr;render();return}
+  if(t.dataset.clear){if(sel<=today){var cs=sel;ask('Clear '+DN[cs]+'? Its ticks, confirmations and points are removed.',function(){S.days[cs]={done:[],ok:null,conf:[]};save();render();toast(DN[cs]+' cleared')})}return}
+  if(t.dataset.wk){ask('Reset this whole week? All days this week are cleared.',function(){S.days={};save();render();toast('Week reset')});return}
+  if(t.dataset.all){ask('Erase ALL progress and the season record? This cannot be undone.',function(){S={week:WK,lifetime:0,days:{},history:{},rewards:S.rewards};sel=today;save();render();toast('Everything erased')},'RESET');return}
+  var d=S.days[sel]||(S.days[sel]={done:[],ok:null});
+  if(t.dataset.ch){var i=d.done.indexOf(t.dataset.ch);if(i>-1)d.done.splice(i,1);else d.done.push(t.dataset.ch);if(d.conf){var j=d.conf.indexOf(t.dataset.ch);if(j>-1)d.conf.splice(j,1)}save();render()}
+  else if(t.dataset.seen){var cf=d.conf||(d.conf=[]),k=cf.indexOf(t.dataset.seen);if(k>-1)cf.splice(k,1);else cf.push(t.dataset.seen);save();render()}
+  else if(t.dataset.own){d.own=!d.own;save();render()}
+  else if(t.dataset.ok){
+    var v=(document.getElementById('ini').value||'').replace(/[^a-z]/gi,'').toUpperCase();
+    if(v.length<2){toast('Add 2–3 initials');return}
+    var b=bank(d);d.ok={by:v,pts:b.p,at:Date.now(),all:b.all,own:!!d.own,items:d.done.slice()};if(b.all)S.perfect=true;if(d.own)S.fair=true;save();render(true);toast('+'+b.p+' pts banked!')
+  }else if(t.dataset.reopen){
+    ask('Reopen this day? It will need a new review and initials.',function(){d.ok=null;d.conf=[];save();render()})
+  }
+});
+render();
+</script>
+</body>
+</html>
